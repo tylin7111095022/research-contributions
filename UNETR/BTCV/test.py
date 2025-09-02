@@ -138,9 +138,9 @@ def main():
                     print_log=True,
                 )
             ])
-            
+
             for d in loader:
-        
+
                 input_data = d['image'].cuda() # (b, c, h, w, d)
                 predict_raw = inference(input_data, model, args) # shape: (B, H, W, D)
                 predict_tensor = torch.from_numpy(predict_raw.astype(np.float32)) # shape: (B, H, W, D)

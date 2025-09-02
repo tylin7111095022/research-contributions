@@ -104,7 +104,7 @@ def main():
         print("Found total gpus", args.ngpus_per_node)
         args.world_size = args.ngpus_per_node * args.world_size
         mp.spawn(main_worker, nprocs=args.ngpus_per_node, args=(args,))
-    else:   
+    else:
         main_worker(gpu=0, args=args)
 
 def main_worker(gpu, args):
@@ -121,7 +121,7 @@ def main_worker(gpu, args):
     torch.backends.cudnn.benchmark = True
     args.test_mode = False
     loader = get_loader(args) if args.btcv else getDatasetLoader(args)
-    
+
     print(args.rank, " gpu", args.gpu)
     if args.rank == 0:
         print("Batch size is:", args.batch_size, "epochs", args.max_epochs)

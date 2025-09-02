@@ -23,9 +23,9 @@ def _get_collate_fn(isTrain:bool):
 
         images = torch.stack(images, dim=0)
         labels = torch.stack(labels, dim=0)
-        
+
         return [torch.Tensor(images), torch.Tensor(labels)]
-    
+
     return collate_fn
 
 def getDatasetLoader(args):
@@ -80,7 +80,7 @@ def getDatasetLoader(args):
                 transforms.ToTensord(keys=["image", "label"]),
             ]
         )
-    
+
     trainDataset = Dataset(data=trainDicts, transform=train_transform)
     valDataset = Dataset(data=valDicts, transform=val_transform)
     trainLoader = DataLoader(trainDataset,batch_size=args.batch_size,shuffle=True,num_workers=args.workers, collate_fn=_get_collate_fn(isTrain=True))
