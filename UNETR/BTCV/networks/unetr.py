@@ -34,7 +34,7 @@ class UNETR(nn.Module):
         hidden_size: int = 768,
         mlp_dim: int = 3072,
         num_heads: int = 12,
-        pos_embed: str = "perceptron",
+        pos_embed: str = "learnable",
         norm_name: Union[Tuple, str] = "instance",
         conv_block: bool = False,
         res_block: bool = True,
@@ -73,6 +73,9 @@ class UNETR(nn.Module):
         if hidden_size % num_heads != 0:
             raise AssertionError("hidden size should be divisible by num_heads.")
 
+        # Backward-compat aliases
+        if pos_embed == "perceptron":
+            pos_embed = "learnable"
         if pos_embed not in ['sincos', 'learnable', 'none']:
             raise KeyError(f"Position embedding layer of type {pos_embed} is not supported.")
 

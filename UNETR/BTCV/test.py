@@ -135,18 +135,21 @@ def main():
                     output_dir="./output",
                     output_postfix="seg",
                     resample=False,
+                    output_dtype=np.uint8,
                     print_log=True,
                 )
             ])
             
             for d in loader:
         
-                input_data = d['image'].cuda() # (b, c, h, w, d)
+                # shape: (b, c, h, w, d) 
+                input_data = (d["image"] if torch.is_tensor(d["image"]) else torch.as_tensor(d["image"])).to(device)
                 predict_raw = inference(input_data, model, args) # shape: (B, H, W, D)
                 predict_tensor = torch.from_numpy(predict_raw.astype(np.float32)) # shape: (B, H, W, D)
 
-                d["pred"] = MetaTensor(predict_tensor, meta=d["image"].meta)
-
+                meta = getattr(d["image"], "meta", None)
+                d["pred"] = MetaTensor(predict_tensor, meta=meta) if meta is not None else predict_tensor
+                
                 postTransforms(d)
 
 if __name__ == "__main__":

@@ -3,4 +3,5 @@ numpy==2.3.2
 opencv_python
 simpleitk==2.5.2
 tensorboardx==2.6.4
-torch
+torch>=2.3,<2.7
+nibabel>=5.0

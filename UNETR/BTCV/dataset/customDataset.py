@@ -23,8 +23,8 @@ def _get_collate_fn(isTrain:bool):
 
         images = torch.stack(images, dim=0)
         labels = torch.stack(labels, dim=0)
-        
-        return [torch.Tensor(images), torch.Tensor(labels)]
+        # keep images float and labels long for loss functions
+        return [images.float(), labels.long()]
     
     return collate_fn
 
@@ -111,7 +111,7 @@ def getPredictLoader(args):
                     keys=["image"], a_min=args.a_min, a_max=args.a_max, b_min=args.b_min, b_max=args.b_max, clip=True
                 ),
                 transforms.CropForegroundd(keys=["image"], source_key="image", allow_smaller=True),
-                # transforms.ToTensord(keys=["image"],track_meta=True), # This transformation will transform MetaTensor to Tensor
+                transforms.EnsureTyped(keys=["image"], track_meta=True),
             ]
         )
     valDataset = Dataset(data=dataDicts, transform=preTransform)
