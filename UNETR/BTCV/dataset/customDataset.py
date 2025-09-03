@@ -29,8 +29,14 @@ def _get_collate_fn(isTrain:bool):
     return collate_fn
 
 def getDatasetLoader(args):
-    dataName = [d for d in os.listdir(NIFTI_LABEL_ROOT)]
-    dataDicts = [{"image": f"{os.path.join(NIFTI_DATA_ROOT, d)}", "label": f"{os.path.join(NIFTI_LABEL_ROOT, d)}"} for d in dataName]
+    exts = (".nii", ".nii.gz")
+    img_names = {f for f in os.listdir(NIFTI_DATA_ROOT) if f.endswith(exts) and os.path.isfile(os.path.join(NIFTI_DATA_ROOT, f))}
+    lbl_names = {f for f in os.listdir(NIFTI_LABEL_ROOT) if f.endswith(exts) and os.path.isfile(os.path.join(NIFTI_LABEL_ROOT, f))}
+    common = sorted(img_names & lbl_names)
+    if not common:
+        raise RuntimeError(f"No matching image/label pairs found in {NIFTI_DATA_ROOT} and {NIFTI_LABEL_ROOT}")
+    dataDicts = [{"image": os.path.join(NIFTI_DATA_ROOT, f), "label": os.path.join(NIFTI_LABEL_ROOT, f)} for f in common]
+
     trainDicts, valDicts = _splitList(dataDicts)
 
     train_transform = transforms.Compose(
