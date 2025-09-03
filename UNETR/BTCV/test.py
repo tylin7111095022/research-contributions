@@ -141,8 +141,8 @@ def main():
             ])
 
             for d in loader:
-        
-                # shape: (b, c, h, w, d) 
+
+                # shape: (b, c, h, w, d)
                 input_data = (d["image"] if torch.is_tensor(d["image"]) else torch.as_tensor(d["image"])).to(device)
 
                 predict_raw = inference(input_data, model, args) # shape: (B, H, W, D)
@@ -150,7 +150,7 @@ def main():
 
                 meta = getattr(d["image"], "meta", None)
                 d["pred"] = MetaTensor(predict_tensor, meta=meta) if meta is not None else predict_tensor
-                
+
                 postTransforms(d)
 
 if __name__ == "__main__":

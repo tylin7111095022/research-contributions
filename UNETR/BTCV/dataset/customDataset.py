@@ -25,7 +25,7 @@ def _get_collate_fn(isTrain:bool):
         labels = torch.stack(labels, dim=0)
         # keep images float and labels long for loss functions
         return [images.float(), labels.long()]
-    
+
     return collate_fn
 
 def getDatasetLoader(args):
