@@ -139,11 +139,12 @@ def main():
                     print_log=True,
                 )
             ])
-            
+
             for d in loader:
         
                 # shape: (b, c, h, w, d) 
                 input_data = (d["image"] if torch.is_tensor(d["image"]) else torch.as_tensor(d["image"])).to(device)
+
                 predict_raw = inference(input_data, model, args) # shape: (B, H, W, D)
                 predict_tensor = torch.from_numpy(predict_raw.astype(np.float32)) # shape: (B, H, W, D)
 
